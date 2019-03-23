@@ -24,7 +24,7 @@ class NewCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('new')
+            ->setName('create')
             ->setDescription('Create a new Bow application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest "development" release')
