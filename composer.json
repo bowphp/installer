@@ -1,6 +1,7 @@
 {
     "name": "bow/installer",
     "description": "Bow framework CLI installer",
+    "keywords": ["bow", "bow installer", "bow framework"],
     "type": "composer-plugin",
     "license": "MIT",
     "authors": [
@@ -27,6 +28,6 @@
         "symfony/process": "~3.0|~4.0"
     },
     "bin": [
-        "mars"
+        "bow"
     ]
 }
