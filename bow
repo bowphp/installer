@@ -1,10 +1,16 @@
 #!/usr/bin/env php
+
 <?php
-if (file_exists(__DIR__.'/../../autoload.php')) {
-    require __DIR__.'/../../autoload.php';
-} else {
+/**
+ * Autoload file
+ */
+(file_exists(__DIR__.'/../../autoload.php')) ?
+    require __DIR__.'/../../autoload.php' :
     require __DIR__.'/vendor/autoload.php';
-}
+
+/**
+ * Instance app
+ */
 $app = new Symfony\Component\Console\Application('Bow Installer', '0.0.1');
 $app->add(new Bow\Installer\Console\NewCommand);
 $app->run();
