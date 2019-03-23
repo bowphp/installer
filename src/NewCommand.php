@@ -25,10 +25,10 @@ class NewCommand extends Command
     {
         $this
             ->setName('new')
-            ->setDescription('Create a new Bow application')
+            ->setDescription('Create a new Bow application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest "development" release')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Forces install even if the directory already exists');
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Forces install even if the directory already exists');
     }
 
     /**
@@ -40,7 +40,7 @@ class NewCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (! extension_loaded('zip')) {
+        if (! class_exists('ZipArchive')) {
             throw new RuntimeException('The Zip PHP extension is not installed. Please install it and try again.');
         }
 
@@ -71,12 +71,6 @@ class NewCommand extends Command
         if ($input->getOption('no-ansi')) {
             $commands = array_map(function ($value) {
                 return $value.' --no-ansi';
-            }, $commands);
-        }
-
-        if ($input->getOption('quiet')) {
-            $commands = array_map(function ($value) {
-                return $value.' --quiet';
             }, $commands);
         }
 
@@ -130,11 +124,11 @@ class NewCommand extends Command
                 $filename = 'latest-develop.zip';
                 break;
             case 'master':
-                $filename = 'latest.zip';
+                $filename = 'master.zip';
                 break;
         }
 
-        $response = (new Client)->get('http://cabinet.bow.com/'.$filename);
+        $response = (new Client)->get('https://github.com/bowphp/app/archive/'.$filename);
 
         file_put_contents($zipFile, $response->getBody());
 
@@ -219,10 +213,8 @@ class NewCommand extends Command
      */
     protected function findComposer()
     {
-        $composerPath = getcwd().'/composer.phar';
-
-        if (file_exists($composerPath)) {
-            return '"'.PHP_BINARY.'" '.$composerPath;
+        if (file_exists(getcwd().'/composer.phar')) {
+            return '"'.PHP_BINARY.'" composer.phar';
         }
 
         return 'composer';
