@@ -1,0 +1,26 @@
+{
+    "name": "bow/installer",
+    "description": "Bow framework CLI installer",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Houssene Dao",
+            "email": "dao.houssene@gmail.com"
+        },
+        {
+            "name": "Hassane Dao",
+            "email": "dao.hassane@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Bow\\Installer\\Console\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "bin": [
+        "mars"
+    ]
+}

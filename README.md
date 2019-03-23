@@ -1,2 +1,2 @@
-# bow-installer
+# Bow Installer
 Bow framework cli installer
