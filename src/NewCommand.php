@@ -65,7 +65,6 @@ class NewCommand extends Command
             $composer.' install --no-scripts',
             $composer.' run-script post-root-package-install',
             $composer.' run-script post-create-project-cmd',
-            $composer.' run-script post-autoload-dump',
         ];
 
         if ($input->getOption('no-ansi')) {
@@ -124,11 +123,11 @@ class NewCommand extends Command
                 $filename = 'latest-develop.zip';
                 break;
             case 'master':
-                $filename = 'master.zip';
+                $filename = 'latest.zip';
                 break;
         }
 
-        $response = (new Client)->get('https://github.com/bowphp/app/archive/'.$filename);
+        $response = (new Client)->get('http://bow.test/'.$filename);
 
         file_put_contents($zipFile, $response->getBody());
 
@@ -182,7 +181,7 @@ class NewCommand extends Command
         $filesystem = new Filesystem;
 
         try {
-            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."bootstrap/cache", 0755, 0000, true);
+            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."config", 0755, 0000, true);
             $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."storage", 0755, 0000, true);
         } catch (IOExceptionInterface $e) {
             $output->writeln('<comment>You should verify that the "storage" and "bootstrap/cache" directories are writable.</comment>');

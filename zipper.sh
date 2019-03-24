@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-wget https://github.com/bowphp/app/archive/0.1.zip
-unzip 0.1.zip -d working
+wget https://github.com/bowphp/app/archive/master.zip
+unzip master.zip -d working
 cd working/app-master
-composer install
-zip -ry ../../bow-craft.zip .
+zip -ry ../../latest.zip .
 cd ../..
-mv bow-craft.zip public/bow-craft.zip
+mv latest.zip /Users/houssenedao/Code/PhpProject/bow/latest.zip
 rm -rf working
-rm 0.1.zip
+rm master.zip
