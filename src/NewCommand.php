@@ -55,7 +55,7 @@ class NewCommand extends Command
         $version = $this->getVersion($input);
 
         $this->download($zipFile = $this->makeFilename(), $version)
-            ->extract($zipFile, $directory, $version)
+            ->extract($zipFile, $directory)
             ->prepareWritableDirectories($directory, $output)
             ->cleanUp($zipFile);
 
@@ -119,15 +119,15 @@ class NewCommand extends Command
     protected function download($zipFile, $version = 'master')
     {
         switch ($version) {
-            case 'master':
-                $filename = 'master.zip';
+            case 'develop':
+                $filename = 'latest-develop.zip';
                 break;
-            default:
-                $filename = $version.'.zip';
+            case 'master':
+                $filename = 'latest.zip';
                 break;
         }
 
-        $response = (new Client)->get('https://github.com/bowphp/app/archive/'.$filename);
+        $response = (new Client)->get('http://bow.test/'.$filename);
 
         file_put_contents($zipFile, $response->getBody());
 
@@ -141,21 +141,13 @@ class NewCommand extends Command
      * @param  string  $directory
      * @return $this
      */
-    protected function extract($zipFile, $directory, $version)
+    protected function extract($zipFile, $directory)
     {
         $archive = new ZipArchive;
 
         $archive->open($zipFile);
 
         $archive->extractTo($directory);
-
-        $tmp = getcwd().'/bow_'.md5(time().uniqid());
-
-        rename($directory."/app-".$version, $tmp);
-
-        $this->rrmdir($directory);
-
-        rename($tmp, $directory);
 
         $archive->close();
 
@@ -189,11 +181,10 @@ class NewCommand extends Command
         $filesystem = new Filesystem;
 
         try {
-            @$filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."config", 0755, 0000, true);
-            @$filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."var", 0755, 0000, true);
-            @$filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."storage", 0755, 0000, true);
+            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."config", 0755, 0000, true);
+            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."storage", 0755, 0000, true);
         } catch (IOExceptionInterface $e) {
-            $output->writeln('<comment>You should verify that the "var" and "config" directories are writable.</comment>');
+            $output->writeln('<comment>You should verify that the "storage" and "bootstrap/cache" directories are writable.</comment>');
         }
 
         return $this;
@@ -221,35 +212,10 @@ class NewCommand extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd().'/../composer.phar')) {
+        if (file_exists(getcwd().'/composer.phar')) {
             return '"'.PHP_BINARY.'" composer.phar';
         }
 
         return 'composer';
-    }
-
-    /**
-     * Remove directories
-     *
-     * @param string $src
-     */
-    public function rrmdir($src)
-    {
-        $dir = opendir($src);
-
-        while (false !== ($file = readdir($dir))) {
-            if ($file != '.' && $file != '..') {
-                $full = $src . '/' . $file;
-
-                if (is_dir($full)) {
-                    rrmdir($full);
-                } else {
-                    unlink($full);
-                }
-            }
-        }
-
-        closedir($dir);
-        rmdir($src);
     }
 }
