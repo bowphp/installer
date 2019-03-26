@@ -1,5 +1,5 @@
 {
-    "name": "bow/installer",
+    "name": "bowphp/installer",
     "description": "Bow framework CLI installer",
     "keywords": ["bow", "bow installer", "bow framework"],
     "type": "composer-plugin",
